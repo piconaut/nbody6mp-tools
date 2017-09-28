@@ -2,10 +2,10 @@
 
 # Only works for KZ(12) >= 3
 
-from math import sqrt
-from sys import stdout, argv
-
 def mass_radii(input_file,fraction,out_name):
+
+  from math import sqrt
+  from sys import stdout, argv
 
   fraction = float(fraction)
 
@@ -53,7 +53,6 @@ def mass_radii(input_file,fraction,out_name):
             i += 1
           
           mass_radii.append(time_radii[i])
-   #       print('Total R_half: ' + str(time_radii[i]))  
 
           time_radii = []
           time_masses = []
@@ -69,7 +68,6 @@ def mass_radii(input_file,fraction,out_name):
             i += 1
 
           mass_radii_pop1.append(time_radii_pop1[i])
-   #       print('Pop1  R_half: ' + str(time_radii_pop1[i]))
 
           time_radii_pop1 = []
           time_masses_pop1 = []
@@ -85,7 +83,6 @@ def mass_radii(input_file,fraction,out_name):
             i += 1
 
           mass_radii_pop2.append(time_radii_pop2[i])
-   #       print('Pop2  R_half: ' + str(time_radii_pop2[i]))
   
           time_radii_pop2 = []
           time_masses_pop2 = []
@@ -127,8 +124,44 @@ def mass_radii(input_file,fraction,out_name):
       f.write(out_str)
   
 
-mass_radii(argv[1],argv[2],argv[3])
 
+def plot_mass_radii(input_file,output_type):
+  import matplotlib.pyplot as plt
+  from math import ceil
+  from sys import argv
+
+  total = []
+  pop1 = []
+  pop2 = []
+
+  with open(input_file,'r') as f:
+    for line in f:
+      line_cleaned = line.split(' ')
+      for i in range(len(line_cleaned)):
+        if '\n' in line_cleaned[i]:
+          line_cleaned[i] = line_cleaned[i].strip()
+        line_cleaned[i] = float(line_cleaned[i])
+
+      if len(line_cleaned) == 1:
+        mass_fraction = line_cleaned[0]
+      else:
+        total.append(line_cleaned[0])
+        pop1.append(line_cleaned[1])
+        pop2.append(line_cleaned[2])
+
+  plt.plot(total,label='Total')
+  plt.plot(pop1,label='Population 1')
+  plt.plot(pop2, label='Population 2')
+  plt.xlabel('*10 time steps')
+  plt.ylabel('R_' + str(mass_fraction))
+  plt.axis([0,ceil(len(total)/100.)*100,0,max([max(total),max(pop1),max(pop2)])+0.25])
+  plt.legend()
+  plt.minorticks_on()
+  plt.grid(True,which='major')
+  plt.grid(True,which='minor',linewidth='0.125')
+  out_file = input_file.rsplit('.',1)[0]
+
+  plt.savefig(out_file + '.' + output_type)
 
 
 
