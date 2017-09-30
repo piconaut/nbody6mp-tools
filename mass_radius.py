@@ -162,6 +162,6 @@ def plot_mass_radii(input_file,output_type):
   out_file = input_file.rsplit('.',1)[0]
 
   plt.savefig(out_file + '.' + output_type)
-
+  plt.close()
 
 
