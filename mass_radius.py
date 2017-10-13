@@ -31,6 +31,8 @@ def mass_radii(input_file,fraction,out_name):
     time_radii_pop2 = []
     time_masses_pop2 = []
 
+    has_pop2 = False
+
     for line in f:
       line_cleaned = line.split(' ')
       for i in reversed(range(len(line_cleaned))):
@@ -73,19 +75,21 @@ def mass_radii(input_file,fraction,out_name):
           time_masses_pop1 = []
 
 
-          time_radii_pop2, time_masses_pop2 = zip(*sorted(zip(time_radii_pop2, time_masses_pop2)))
-          total_mass_pop2 = sum(time_masses_pop2)
+          if has_pop2 == True:
 
-          current_mass_pop2 = 0.
-          i=0
-          while current_mass_pop2 < total_mass_pop2*fraction:
-            current_mass_pop2 += time_masses_pop2[i]
-            i += 1
+            time_radii_pop2, time_masses_pop2 = zip(*sorted(zip(time_radii_pop2, time_masses_pop2)))
+            total_mass_pop2 = sum(time_masses_pop2)
 
-          mass_radii_pop2.append(time_radii_pop2[i])
+            current_mass_pop2 = 0.
+            i=0
+            while current_mass_pop2 < total_mass_pop2*fraction:
+              current_mass_pop2 += time_masses_pop2[i]
+              i += 1
+
+            mass_radii_pop2.append(time_radii_pop2[i])
   
-          time_radii_pop2 = []
-          time_masses_pop2 = []
+            time_radii_pop2 = []
+            time_masses_pop2 = []
   
           stdout.write('\rProgress: ' + str('{:5.2f}'.format(100*len(mass_radii)/n_timesteps))+'%')
           stdout.flush()
@@ -114,13 +118,17 @@ def mass_radii(input_file,fraction,out_name):
           elif line_cleaned[13] == '2':
             time_masses_pop2.append(mass)
             time_radii_pop2.append(radius)
+            has_pop2 = True
 
   print('')
   
   with open(out_name,'w') as f:
     f.write(str(fraction) + '\n')
     for i in range(len(mass_radii)):
-      out_str = str(mass_radii[i]) + ' ' + str(mass_radii_pop1[i]) + ' ' + str(mass_radii_pop2[i]) + '\n'
+      if has_pop2:
+        out_str = str(mass_radii[i]) + ' ' + str(mass_radii_pop1[i]) + ' ' + str(mass_radii_pop2[i]) + '\n'
+      else:
+        out_str = str(mass_radii[i]) + '\n'
       f.write(out_str)
   
 
