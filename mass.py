@@ -1,4 +1,4 @@
-def mass(input_file,out_name):
+def total_mass(input_file,out_name):
 
   total_mass = []
   total_mass_pop1 = []
