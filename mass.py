@@ -45,7 +45,7 @@ def total_mass(input_file,out_name):
             has_pop2 = True
 
   with open(out_name,'w') as f:
-    for i in range(len(mass_radii)):
+    for i in range(len(total_mass)):
       if has_pop2:
         out_str = str(total_mass[i]) + ' ' + str(total_mass_pop1[i]) + ' ' + str(total_mass_pop2[i]) + '\n'
       else:
