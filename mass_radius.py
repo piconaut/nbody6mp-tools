@@ -143,26 +143,46 @@ def plot_mass_radii(input_file,output_type):
   pop2 = []
 
   with open(input_file,'r') as f:
-    for line in f:
+    for index,line in enumerate(f):
       line_cleaned = line.split(' ')
       for i in range(len(line_cleaned)):
         if '\n' in line_cleaned[i]:
           line_cleaned[i] = line_cleaned[i].strip()
         line_cleaned[i] = float(line_cleaned[i])
 
-      if len(line_cleaned) == 1:
+      if index == 0:
         mass_fraction = line_cleaned[0]
+        nbody_parsec = line_cleaned[1]
+        nbody_Myr = line_cleaned[2]*10
       else:
         total.append(line_cleaned[0])
-        pop1.append(line_cleaned[1])
-        pop2.append(line_cleaned[2])
+        if len(line_cleaned) > 1:
+          pop1.append(line_cleaned[1])
+          pop2.append(line_cleaned[2])
 
-  plt.plot(total,label='Total')
-  plt.plot(pop1,label='Population 1')
-  plt.plot(pop2, label='Population 2')
-  plt.xlabel('*10 time steps')
-  plt.ylabel('R_' + str(mass_fraction))
-  plt.axis([0,ceil(len(total)/100.)*100,0,max([max(total),max(pop1),max(pop2)])+0.25])
+  if len(pop2) > 1:
+    has_pop2 = True
+  else:
+    has_pop2 = False
+
+  time = []
+  for i in range(len(total)):
+    time.append(i*nbody_Myr)
+    total[i] = total[i]*nbody_parsec
+    if has_pop2:
+      pop1[i] = pop1[i]*nbody_parsec
+      pop2[i] = pop2[i]*nbody_parsec
+
+  plt.plot(time,total,label='Total')
+  if has_pop2:
+    plt.plot(time,pop1,label='Population 1')
+    plt.plot(time,pop2, label='Population 2')
+  plt.xlabel('Time (Myr)')
+  plt.ylabel('R_' + str(mass_fraction) + '(parsecs)')
+  if has_pop2:
+    plt.axis([0,max(time),0,max([max(total),max(pop1),max(pop2)])+0.25])
+  else:
+    plt.axis([0,max(time),0,max(total)+0.25])
   plt.legend()
   plt.minorticks_on()
   plt.grid(True,which='major')
