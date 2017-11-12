@@ -35,6 +35,8 @@ def total_mass(input_file,out_name):
           time_masses_pop1 = []
 
         else:
+          mass = float(line_cleaned[2])
+
           time_masses.append(mass)
           if line_cleaned[13] == '1':
             time_masses_pop1.append(mass)
