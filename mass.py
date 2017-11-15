@@ -86,10 +86,10 @@ def plot_mass(input_file,output_type):
   time = []
   for i in range(len(total)):
     time.append(i*nbody_Myr)
-    total[i] = total[i]*nbody_Msun
-    if has_pop2:
-      pop1[i] = pop1[i]*nbody_Msun
-      pop2[i] = pop2[i]*nbody_Msun
+  #  total[i] = total[i]*nbody_Msun
+ #   if has_pop2:
+  #    pop1[i] = pop1[i]*nbody_Msun
+  #    pop2[i] = pop2[i]*nbody_Msun
 
   plt.plot(time,total,label='Total')
   if has_pop2:
