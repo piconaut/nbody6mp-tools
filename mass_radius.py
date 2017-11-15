@@ -53,8 +53,10 @@ def mass_radii(input_file,fraction,out_name):
           while current_mass < total_mass*fraction:
             current_mass += time_masses[i]
             i += 1
-          
-          mass_radii.append(time_radii[i])
+          try:
+            mass_radii.append(time_radii[i])
+          except:
+            mass_radii.append(float('nan'))
 
           time_radii = []
           time_masses = []
@@ -68,8 +70,10 @@ def mass_radii(input_file,fraction,out_name):
           while current_mass_pop1 < total_mass_pop1*fraction:
             current_mass_pop1 += time_masses_pop1[i]
             i += 1
-
-          mass_radii_pop1.append(time_radii_pop1[i])
+          try:
+            mass_radii_pop1.append(time_radii_pop1[i])
+          except:
+            mass_radii_pop1.append(float('nan'))
 
           time_radii_pop1 = []
           time_masses_pop1 = []
@@ -85,8 +89,10 @@ def mass_radii(input_file,fraction,out_name):
             while current_mass_pop2 < total_mass_pop2*fraction:
               current_mass_pop2 += time_masses_pop2[i]
               i += 1
-
-            mass_radii_pop2.append(time_radii_pop2[i])
+            try:
+              mass_radii_pop2.append(time_radii_pop2[i])
+            except:
+              mass_radii_pop2.append(float('nan'))
   
             time_radii_pop2 = []
             time_masses_pop2 = []
