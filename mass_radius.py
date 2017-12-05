@@ -327,7 +327,8 @@ def plot_mass_radii(input_file,output_type):
     plt.plot(time,pop1,label='Population 1')
     plt.plot(time,pop2, label='Population 2')
   plt.xlabel('Time (Myr)')
-  plt.ylabel('R_' + str(mass_fraction) + '(parsecs)')
+#  plt.ylabel('R_' + str(mass_fraction) + '(parsecs)')
+  plt.ylabel('Harmonic mean radius (parsecs)')
   if has_pop2:
     plt.axis([0,max(time),0,max([max(total),max(pop1),max(pop2)])+0.25])
   else:
