@@ -149,7 +149,7 @@ def plot_num(input_file,output_type):
   plt.xlabel('Time (Myr)')
   plt.ylabel('Number of stars')
   if has_pop2:
-    plt.axis([0,max(time),0,max([max(total),max(pop1),max(pop2)])+0.25])
+    plt.axis([0,max(time),0,max([max(total),max(pop1),max(pop2)])+0.25*max([max(total),max(pop1),max(pop2)])])
   else:
     plt.axis([0,max(time),0,max(total)+0.25])
   plt.legend()

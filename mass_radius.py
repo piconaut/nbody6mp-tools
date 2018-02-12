@@ -282,7 +282,7 @@ def mass_radii(input_file,fraction,out_name):
   
 
 
-def plot_mass_radii(input_file,output_type):
+def plot_mass_radii(input_files,output_type):
   import matplotlib.pyplot as plt
   from math import ceil
   from sys import argv
@@ -290,50 +290,120 @@ def plot_mass_radii(input_file,output_type):
   total = []
   pop1 = []
   pop2 = []
+  times = []
+  maxes = []
 
-  with open(input_file,'r') as f:
-    for index,line in enumerate(f):
-      line_cleaned = line.split(' ')
-      for i in range(len(line_cleaned)):
-        if '\n' in line_cleaned[i]:
-          line_cleaned[i] = line_cleaned[i].strip()
-        line_cleaned[i] = float(line_cleaned[i])
+  fig = plt.figure()
+  ax = plt.subplot(111)
 
-      if index == 0:
-        mass_fraction = line_cleaned[0]
-        nbody_parsec = line_cleaned[1]
-        nbody_Myr = line_cleaned[2]*10
+  special_notplotted = True
+  normal_notplotted = True
+
+  for input_file in input_files:
+
+    total = []
+    pop1 = []
+    pop2 = []
+    times = []
+
+    colour1 = 'b'
+    colour2 = 'g'
+    colour3 = 'c'
+    helium = 0.0
+
+    with open(input_file,'r') as f:
+      for index,line in enumerate(f):
+        line_cleaned = line.split(' ')
+        for i in range(len(line_cleaned)):
+          if '\n' in line_cleaned[i]:
+            line_cleaned[i] = line_cleaned[i].strip()
+          line_cleaned[i] = float(line_cleaned[i])
+
+        if index == 0:
+          mass_fraction = line_cleaned[0]
+          nbody_parsec = line_cleaned[1]
+          nbody_Myr = line_cleaned[2]*10
+          try:
+            if line_cleaned[3] != 0.0:
+              colour1 = 'r'
+              colour2 = 'm'
+              colour3 = '#FF4500'
+              helium = line_cleaned[3]
+          except:
+            # not special
+            pass
+        else:
+          total.append(line_cleaned[0])
+          if len(line_cleaned) > 1:
+            pop1.append(line_cleaned[1])
+            pop2.append(line_cleaned[2])
+
+    if len(pop2) > 1:
+      has_pop2 = True
+    else:
+      has_pop2 = False
+
+    time = []
+    for i in range(len(total)):
+      time.append(i*nbody_Myr)
+      total[i] = total[i]*nbody_parsec
+      if has_pop2:
+        pop1[i] = pop1[i]*nbody_parsec
+        pop2[i] = pop2[i]*nbody_parsec
+
+    times.append(time[-1])
+    maxes.append(max([max(total),max(pop1),max(pop2)]))
+
+    if "5" in input_file:
+      if helium == 0.0:
+        if normal_notplotted:
+          normal_notplotted = False
+          plt.plot(time,total,colour1,label='Total, Y2 normal',lw=0.2)
+          if has_pop2:
+            plt.plot(time,pop1,colour2,label='Pop 1, Y2 normal',lw=0.2)
+            plt.plot(time,pop2,colour3,label='Pop 2, Y2 normal',lw=0.2)
+        else:
+          plt.plot(time,total,colour1,lw=0.2)
+          if has_pop2:
+            plt.plot(time,pop1,colour2,lw=0.2)
+            plt.plot(time,pop2,colour3,lw=0.2)
       else:
-        total.append(line_cleaned[0])
-        if len(line_cleaned) > 1:
-          pop1.append(line_cleaned[1])
-          pop2.append(line_cleaned[2])
+        if special_notplotted:
+          special_notplotted = False
+          plt.plot(time,total,colour1,label='Total, Y2='+str(helium),lw=0.2)
+          if has_pop2:
+            plt.plot(time,pop1,colour2,label='Pop 1, Y2='+str(helium),lw=0.2)
+            plt.plot(time,pop2,colour3,label='Pop 2, Y2='+str(helium),lw=0.2)
+        else:
+          plt.plot(time,total,colour1,lw=0.2)
+          if has_pop2:
+            plt.plot(time,pop1,colour2,lw=0.2)
+            plt.plot(time,pop2,colour3,lw=0.2)
 
-  if len(pop2) > 1:
-    has_pop2 = True
-  else:
-    has_pop2 = False
+    else:
 
-  time = []
-  for i in range(len(total)):
-    time.append(i*nbody_Myr)
-    total[i] = total[i]*nbody_parsec
-    if has_pop2:
-      pop1[i] = pop1[i]*nbody_parsec
-      pop2[i] = pop2[i]*nbody_parsec
+      plt.plot(time,total,label='Total Y2 = 0.32')
+      if has_pop2:
+        plt.plot(time,pop1,label='Population 1')
+        plt.plot(time,pop2, label='Population 2, Y2 = 0.32')
 
-  plt.plot(time,total,label='Total')
-  if has_pop2:
-    plt.plot(time,pop1,label='Population 1')
-    plt.plot(time,pop2, label='Population 2')
+
   plt.xlabel('Time (Myr)')
-#  plt.ylabel('R_' + str(mass_fraction) + '(parsecs)')
-  plt.ylabel('Harmonic mean radius (parsecs)')
+  plt.ylabel('R_' + str(mass_fraction) + '(parsecs)')
+#  plt.ylabel('Harmonic mean radius (parsecs)')
   if has_pop2:
-    plt.axis([0,max(time),0,max([max(total),max(pop1),max(pop2)])+0.25])
+    plt.axis([0,max(times)*2,0,max(maxes)+0.25])
   else:
-    plt.axis([0,max(time),0,max(total)+0.25])
-  plt.legend()
+    plt.axis([0,max(times),0,max(total)+0.25])
+
+  # Shrink current axis by 20%
+  box = ax.get_position()
+  ax.set_position([box.x0, box.y0, box.width, box.height])
+
+  # Put a legend to the right of the current axis
+  ax.legend(loc=4)
+
+#  plt.legend()
   plt.minorticks_on()
   plt.grid(True,which='major')
   plt.grid(True,which='minor',linewidth='0.125')
