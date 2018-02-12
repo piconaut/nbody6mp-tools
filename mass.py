@@ -84,6 +84,43 @@ def topmass(input_file):
               max_mass = mass
               print max_mass
 
+def topnmass(input_file,n):
+  finished = False
+  max_masses = []
+  for i in range(n):
+    max_masses.append(0.0)
+
+  with open(input_file,'r') as f:
+    for line in f:
+      if not finished:
+        line_cleaned = line.split(' ')
+        for i in reversed(range(len(line_cleaned))):
+          if line_cleaned[i] == '':
+            del line_cleaned[i]
+          elif '\n' in line_cleaned[i]:
+            line_cleaned[i] = line_cleaned[i].strip()
+
+
+        if len(line_cleaned) == 14:
+
+          if line_cleaned[0] == '-1000':
+            finished = True
+            avg_masses = sum(max_masses)/float(len(max_masses))
+            print "Average of top " + str(n) + " masses: " + str(avg_masses)
+            print max_masses
+            break
+            break
+            break
+            break
+
+          else:
+            mass = float(line_cleaned[2])
+            for i in range(len(max_masses)):
+              if mass > max_masses[i] and max_masses[i] == min(max_masses):
+                max_masses[i] = mass
+                print max_masses[i]
+
+
 def plot_mass(input_file,output_type):
   import matplotlib.pyplot as plt 
   from math import ceil
