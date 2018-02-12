@@ -114,11 +114,14 @@ def topnmass(input_file,n):
             break
 
           else:
+            found = False
             mass = float(line_cleaned[2])
             for i in range(len(max_masses)):
-              if mass > max_masses[i] and max_masses[i] == min(max_masses):
+              if mass > max_masses[i] and max_masses[i] == min(max_masses) and found == False:
                 max_masses[i] = mass
                 print max_masses[i]
+                break
+                break
 
 
 def plot_mass(input_file,output_type):
