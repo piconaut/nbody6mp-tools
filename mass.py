@@ -52,6 +52,38 @@ def total_mass(input_file,out_name):
         out_str = str(total_mass[i]) + '\n'
       f.write(out_str)
 
+def topmass(input_file):
+
+  finished = False
+  max_mass = 0.0
+
+  with open(input_file,'r') as f:
+    for line in f:
+      if not finished:
+        line_cleaned = line.split(' ')
+        for i in reversed(range(len(line_cleaned))):
+          if line_cleaned[i] == '':
+            del line_cleaned[i]
+          elif '\n' in line_cleaned[i]:
+            line_cleaned[i] = line_cleaned[i].strip()
+
+
+        if len(line_cleaned) == 14:
+
+          if line_cleaned[0] == '-1000':
+            finished = True
+            print "Most massive star: " + str(max_mass)
+            break
+            break
+            break
+            break
+
+          else:
+            mass = float(line_cleaned[2])
+            if mass > max_mass:
+              max_mass = mass
+              print max_mass
+
 def plot_mass(input_file,output_type):
   import matplotlib.pyplot as plt 
   from math import ceil
