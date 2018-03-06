@@ -360,7 +360,7 @@ def plot_mass_radii(input_files,output_type):
 
     time = []
     for i in range(len(total)):
-      time.append(i*nbody_Myr)
+      time.append(i*nbody_Myr) #technically should be 10* here, 1* above
       total[i] = total[i]*nbody_parsec
       if has_pop2:
         pop1[i] = pop1[i]*nbody_parsec
