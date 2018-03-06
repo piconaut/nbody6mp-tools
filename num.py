@@ -53,7 +53,9 @@ def avg_mass(input_file,out_name):
       f.write(out_str)
 
 
-def total_num(input_file,out_name):
+def total_num(input_file,out_name,short):
+
+  short_steps = 0
 
   total_mass = []
   total_mass_pop1 = []
@@ -79,6 +81,14 @@ def total_num(input_file,out_name):
       if len(line_cleaned) == 14: 
 
         if line_cleaned[0] == '-1000':
+          if short:
+            short_steps += 1
+            if short_steps > 99:
+              break
+              break
+              break
+              break
+              break
           total_mass.append(len(time_masses))
           total_mass_pop1.append(len(time_masses_pop1))
  

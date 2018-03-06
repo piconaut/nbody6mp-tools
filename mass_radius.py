@@ -145,10 +145,12 @@ def virial_radii(input_file,fraction,out_name):
       f.write(out_str)
   
 
-def mass_radii(input_file,fraction,out_name):
+def mass_radii(input_file,fraction,out_name,short):
 
   from math import sqrt
   from sys import stdout, argv
+
+  short_steps = 0
 
   fraction = float(fraction)
 
@@ -188,6 +190,15 @@ def mass_radii(input_file,fraction,out_name):
       if len(line_cleaned) == 14:
 
         if line_cleaned[0] == '-1000':
+          if short:
+            short_steps += 1
+            if short_steps > 1:
+              break
+              break
+              break
+              break
+              break
+              break
           time_radii, time_masses = zip(*sorted(zip(time_radii, time_masses)))
           total_mass = sum(time_masses)
 
@@ -271,6 +282,10 @@ def mass_radii(input_file,fraction,out_name):
 
   print('')
   
+  print len(time_masses_pop1)
+  print len(time_masses_pop2)
+  print len(time_masses)
+
   with open(out_name,'w') as f:
     f.write(str(fraction) + '\n')
     for i in range(len(mass_radii)):
